@@ -1,0 +1,201 @@
+'''
+老王开枪v1.0
+关键字：类的创建与使用
+
+class Person(object):
+    """老王"""
+    def __init__(self,name):
+        super(Person,self).__init__()#调用一下父类的功能
+        self.name = name #人名
+        self.gun = None #保存枪对象的引用
+        self.hp = 100 #人物的初始血量
+    def load_bullet(self,magazine_temp,bullet_temp): #两个temp指向实参
+        """把子弹装到弹夹"""
+        
+        #弹夹 保存了子弹
+        magazine_temp.save_bullet(bullet_temp)
+    
+    def load_magazine(self,gun_temp,magazine_temp):
+        """安装弹夹"""
+        #枪.保存弹夹（弹夹）
+        gun_temp.save_magazine(magazine_temp)
+
+    def pick_gun(self,gun_temp):
+        """拿起枪(即：让老王与枪创建连接，用属性)"""
+        self.gun = gun_temp
+
+    def fire_gun(self,enemy):
+        """开枪，面对enemy开枪"""
+        self.gun.fire(enemy)  #枪.开火（敌人），开火的功能在枪对象中
+
+    def hp_damage(self,bullet_damage):
+        """按照bullet_damage伤害来减少相应血量"""
+        self.hp -= bullet_damage
+        
+    def __str__(self):
+        if self.gun:
+            """self.gun指向ak47对象。直接返回的是gun的str"""
+            return "%s血量为：%d,持有：%s"%(self.name,self.hp,self.gun)
+
+        else:
+            return "%s血量为：%d，没有枪"%(self.name,self.hp)
+
+class Gun(object):
+    """枪类"""
+    def __init__(self,name):
+        super(Gun,self).__init__()
+        self.name = name #枪名
+        self.magazine = None #保存 弹夹对象的引用
+    def save_magazine(self,magazine_temp):
+        """用一个属性保存 弹夹对象的引用"""
+        self.magazine = magazine_temp
+    
+    def fire(self,enemy):
+        """弹夹中获取一发子弹，然后使敌人减少子弹伤害的血量"""
+        #从弹夹中取子弹.弹夹.弹出一发子弹()
+        bullet_temp = self.magazine.get_bullet() 
+
+        #让子弹造成伤害
+        if bullet_temp :
+            bullet_temp.hit(enemy) #击中敌人，让子弹类 对敌人造成伤害
+        else:
+            print("没有子弹")
+    def __str__(self):
+        if self.magazine:
+            """调用弹夹对象的引用(self.magazine)，此处可看出属性保存相关"""
+            """联对象的必要性...调用的self.magazine最终指向Danjia类（对象为"""
+            """magazine).所以如果直接写magazine对象的话，是返回它的str，为一串字符串""" 
+            return "枪名:%s，%s"%(self.name,self.magazine) 
+
+        else:
+            return "枪名：%s,无弹夹"%(self.name)
+
+class Magazine(object):
+    """弹夹类"""
+
+    def __init__(self,max_num):
+        super(Magazine,self).__init__()
+        self.max_num = max_num #记录弹夹最大容量
+        self.bullet_list =[] #记录所有子弹的引用，所有插入的子弹
+
+    def save_bullet(self,bullet_temp):
+        """保存子弹"""
+        self.bullet_list.append(bullet_temp) #插入1发 子弹
+    
+    def get_bullet(self):
+        """弹出最上面那个子弹"""
+        if self.bullet_list: #如果bullet_list=[]，则不执行
+            return self.bullet_list.pop()
+        else:
+            return None
+
+    def __str__(self):
+        return "弹夹信息：%d/%d"%(len(self.bullet_list),self.max_num)
+
+class Bullet(object):
+    """子弹类"""
+    def __init__(self,damage):
+        super(Bullet,self).__init__()
+        self.damage = damage #子弹杀伤力
+
+    def hit(self,enemy):
+        """让敌人掉血"""
+        enemy.hp_damage(self.damage) 
+        """对敌人造成伤害，把子弹伤害传给敌人"""
+        """掉血功能在敌人对象中实现"""
+
+def main():
+    """主流程"""
+
+    #1.老王对象
+    laowang = Person("老王")
+
+    #2.枪对象
+    ak47 = Gun("ak47")
+
+    #3.弹匣对象
+    magazine = Magazine(30) #最大容量为30
+
+    #4.子弹对象
+    bullet = Bullet(30)  #子弹伤害为30
+
+    #5.敌人对象
+    maojian = Person("毛奸")
+
+    #6.装子弹（老王的方法）
+    #for i in range(25):      #上25发子弹
+        #bullet = Bullet(30)  #伤害为30的子弹
+        #laowang.load_bullet(magazine,bullet)
+    #7.装弹匣（老王,枪，弹夹）
+    laowang.load_magazine(ak47,magazine)
+
+    #8.拿起枪 (老王，枪)
+    laowang.pick_gun(ak47)
+
+    #9.开枪
+    def fire_1():
+        laowang.fire_gun(maojian)
+
+    #test1:测试弹夹信息
+    print(magazine)
+
+    #test2:测试枪信息
+    print(ak47)
+
+    #test3:测试所有人物对象
+    print(laowang)
+    print("enemy:%s"%maojian)
+    
+#=====================瞎搞=========================   
+    print("="*50)
+    print("1： 7.62 口径： 伤害：40")
+    print("2： 5.56 口径： 伤害：30")
+    print("3： .45  口径： 伤害：20")
+    print("4： 9mm  口径： 伤害：10")
+    print("5： 牙签 口径： 伤害：5\n")
+    
+    print("="*50)
+    bullet_type = input("选择子弹种类(输入数字)：")
+    while True:
+
+        
+        if bullet_type == "1":
+                bullet = Bullet(40)
+                break
+        elif bullet_type =="2":
+                bullet = Bullet(30)
+                break
+        elif bullet_type =='3':
+                bullet = Bullet(20)
+                break
+        elif bullet_type =='4':
+                bullet = Bullet(10)
+                break
+        elif bullet_type =='5':
+                bullet = Bullet(5)
+                print("\n===解锁成就：[抖S 专家]===\n")
+                break
+        
+        else:
+            bullet_type = input("输错了，请重新输入：\n")
+    for i in range(25):      #上25发子弹
+        
+        laowang.load_bullet(magazine,bullet)
+    
+    while True:
+
+        fire = input("\n输入任意字母或回车发射一颗子弹\n\n")
+        if fire == 'a-z' or 'A-Z' :
+            fire_1()
+            print("毛奸血量-%d  剩余：%d/100\n"%(bullet.damage,maojian.hp))
+            print("毛奸：啊~~~,雅蠛蝶\n")
+        else:
+            print("输错了。。\n")
+
+        if maojian.hp <=0 :
+            print('='*50+"\n。。。菊花残，满地伤。。。\n")
+            break
+
+
+if __name__ == '__main__':
+    main()
