@@ -1,0 +1,19 @@
+# 硬盘文件记录，浏览器显示都是utf-8。内存中是unicode
+
+print(ord('法'))  # 27861
+print(chr(27861))  # 法
+
+print(bin(27861))  # 0b110110011010101
+print(int('0b110110011010101',2))  # 十进制转换二进制27861
+
+print(oct(27861))  # 十进制-》八进制 0o66325
+print(hex(27861))  # 十进制 -》 十六进制 0x6cd5
+
+#####################################################
+# str 类型 -》 bytes类型(b'xxx')（内存，网络传输[unicode])
+# utf-8 码兼容 ascii 码
+# encode 即转成内存用码（字节流）
+
+print('test'.encode('ascii'))  # b'test'
+
+print('测试'.encode('utf-8'))   # b'\xe6\xb5\x8b\xe8\xaf\x95'
