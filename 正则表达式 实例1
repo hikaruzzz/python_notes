@@ -1,0 +1,14 @@
+# coding = utf-8
+
+import re
+f = open('./test.txt','r',encoding='gb2312')
+data = re.findall('(计算机系统结构|计算机软件与理论|计算机应用技术).*?([\u4e00-\u9fa5]{2,15}\(*.{0,8}\)*[\u4e00-\u9fa5]{0,5})', f.read())
+#  [\u4e00-\u9fa5]{2,15}\(*.{0,8}\)是用于匹配   ‘考博(xxx大学)’
+#  [\u4e00-\u9fa5]{2,15}\(*.{0,8}\)*[\u4e00-\u9fa5]{0,5}  用于匹配  ‘xxx（广州）xxx公司’
+
+xx = open('./test2.txt','w+')
+print(data)
+data2 = ''
+for i in data:
+    data2 = data2 + i[0] + '\t\t'+ i[1] + '\n'
+xx.write(data2)
