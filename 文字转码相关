@@ -17,3 +17,13 @@ print(hex(27861))  # 十进制 -》 十六进制 0x6cd5
 print('test'.encode('ascii'))  # b'test'
 
 print('测试'.encode('utf-8'))   # b'\xe6\xb5\x8b\xe8\xaf\x95'
+
+##########################################################
+# txt文件是GB2312 格式，open('xx','r',encoding = 'GB2312') 就能打开
+
+f = open('./test.txt','r',encoding='gb2312')
+print(f.read())
+
+# 用utf-8格式写入txt，且该txt格式为utf-8
+
+f = open('./test.txt','w',encoding = 'utf-8')
